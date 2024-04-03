@@ -1,7 +1,12 @@
-import React from "react";
+import React, { ElementType } from "react";
 import "../styles/globals.css";
 
-function App({ Component, pageProps }) {
+interface IApp {
+  Component: ElementType;
+  pageProps: any;
+}
+
+function App({ Component, pageProps }: IApp) {
   return <Component {...pageProps} />;
 }
 

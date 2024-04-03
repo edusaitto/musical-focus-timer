@@ -95,8 +95,8 @@ export default function App() {
         >
           <defs>
             <linearGradient id="gradient" gradientTransform="rotate(90)">
-              <stop offset="20%" stopColor="#36acac" />
-              <stop offset="80%" stopColor="#465667" />
+              <stop offset="10%" stopColor="#36acac" />
+              <stop offset="90%" stopColor="#2a7599" />
             </linearGradient>
           </defs>
         </Wave>
@@ -109,7 +109,7 @@ export default function App() {
             }}
             styles={{
               activeColor: "#fff",
-              bgColor: "#465667",
+              bgColor: "#2a7599",
               color: "#fff",
               loaderColor: "#fff",
               sliderColor: "#1cb954",

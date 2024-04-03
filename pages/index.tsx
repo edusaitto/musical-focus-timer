@@ -85,7 +85,7 @@ export default function App() {
       <div className="absolute bottom-0 left-0 right-0">
         <Wave
           fill="url(#gradient)"
-          style={{ display: "flex", height: 100, zIndex: 1 }}
+          style={{ display: "flex", height: 180, zIndex: 1 }}
           options={{
             height: 20,
             amplitude: 30,
@@ -106,6 +106,15 @@ export default function App() {
             callback={(state) => {
               if (state.isPlaying) setPlay(true);
               if (state.isPlaying == false) setPlay(false);
+            }}
+            styles={{
+              activeColor: "#fff",
+              bgColor: "#465667",
+              color: "#fff",
+              loaderColor: "#fff",
+              sliderColor: "#1cb954",
+              trackArtistColor: "#ccc",
+              trackNameColor: "#fff",
             }}
             showSaveIcon
             play={play}

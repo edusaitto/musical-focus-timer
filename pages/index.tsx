@@ -143,7 +143,7 @@ export default function App() {
           </div>
         )}
         <div className="w-[23%] flex justify-end">
-          <div className="bg-white rounded-lg px-8 py-4 text-black text-center h-min w-3/6">
+          <div className="bg-white rounded-lg px-8 py-4 text-black text-center h-min w-4/6">
             <p className="text-lg font-normal">tempo de foco</p>
             <p className="text-2xl font-bold">
               {timerHours < 10 ? `0${timerHours}` : timerHours}:

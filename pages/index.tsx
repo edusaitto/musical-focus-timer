@@ -101,10 +101,14 @@ export default function App() {
               setSearch(e.target.value);
             }}
             value={search}
-            className="px-4 py-5 text-sm text-gray-900 rounded-lg bg-gray-50 outlined-none text-left w-[100%]"
+            className={`px-4 py-5 text-sm rounded-lg bg-transparent outlined-none text-left w-[100%] border ${
+              theme === "blue"
+                ? "border-secondary-blue"
+                : "border-primary-purple"
+            }`}
             placeholder="Busque por playlist"
           />
-          {search != "" && (
+          {search != "" && playlistsFound && (
             <div className="bg-white rounded-lg w-100 mt-2 px-3 py-1 absolute w-[100%]">
               {playlistsFound.map((pl) => {
                 return (
@@ -129,13 +133,13 @@ export default function App() {
             </div>
           )}
         </div>
-        {playlist && play && (
-          <div>
+        {playlist && (
+          <div className="bg-white h-min py-1 px-5 rounded-full">
             <p
               className={
                 theme === "blue"
-                  ? "text-sm font-bold text-primary-blue"
-                  : "text-sm font-bold text-primary-purple"
+                  ? "text-sm font-bold text-secondary-blue"
+                  : "text-sm font-bold text-secondary-purple"
               }
             >
               Ouvindo de: {playlist.name}
@@ -143,7 +147,13 @@ export default function App() {
           </div>
         )}
         <div className="w-[23%] flex justify-end">
-          <div className="bg-white rounded-lg px-8 py-4 text-black text-center h-min w-4/6">
+          <div
+            className={`bg-transparent rounded-lg px-8 py-4 text-center h-min w-4/6 border ${
+              theme === "blue"
+                ? "border-secondary-blue text-secondary-blue"
+                : "border-primary-purple text-primary-purple"
+            }`}
+          >
             <p className="text-lg font-normal">tempo de foco</p>
             <p className="text-2xl font-bold">
               {timerHours < 10 ? `0${timerHours}` : timerHours}:
@@ -153,7 +163,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <div className="w-[46px]"></div>
         {firstEnter && !play ? (
           <h1

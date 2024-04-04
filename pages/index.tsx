@@ -173,7 +173,11 @@ export default function App() {
         <div className="mr-4 flex flex-col">
           <button
             onClick={() => setTheme("blue")}
-            className="h-[30px] w-[30px] bg-primary-blue rounded-md mb-2"
+            className={
+              theme === "blue"
+                ? "h-[30px] w-[30px] bg-primary-blue rounded-md mb-2 border-4 border-white"
+                : "h-[30px] w-[30px] bg-primary-blue rounded-md mb-2"
+            }
           />
           <button
             onClick={() => setTheme("purple")}

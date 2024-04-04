@@ -21,6 +21,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-spotify-web-playback": "^0.14.4",
+    "react-timer-hook": "^3.0.7",
     "react-wavify": "^1.10.0",
     "spotify-web-api-node": "^5.0.2",
     "typescript": "5.4.3"

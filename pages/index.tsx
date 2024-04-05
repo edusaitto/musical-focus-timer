@@ -3,51 +3,27 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import useAuth from "@/services/auth";
-import SpotifyWebApi from "spotify-web-api-node";
-import SpotifyPlayer from "react-spotify-web-playback";
 import Wave from "react-wavify";
 import { useStopwatch } from "react-timer-hook";
+import SpotifyPlayer from "react-spotify-web-playback";
+import SpotifyWebApi from "spotify-web-api-node";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
 });
 
-interface ITrack {
-  title: string;
-  uri: string;
-  duration: number;
-}
-
-interface IOwner {
-  display_name: string;
-}
-
-interface IImage {
-  url: string;
-}
-
-interface IPlaylist {
-  id: string;
-  owner: IOwner;
-  name: string;
-  image: IImage[];
-  uri: string;
-}
-
 export default function App() {
   const router = useRouter();
-  const { start, pause, minutes, seconds, hours } = useStopwatch();
-  const [theme, setTheme] = useState<"blue" | "purple">("blue");
-  const [timerHours, setTimerHours] = useState(hours);
-  const [timerMinutes, setTimerMinutes] = useState(minutes);
-  const [timerSeconds, setTimerSeconds] = useState(seconds);
-  const [firstEnter, setFirstEnter] = useState(true);
-  const [search, setSearch] = useState<string>("");
-  const [playlist, setPlaylist] = useState<IPlaylist>();
-  const [playlistsFound, setPlaylistsFound] = useState<IPlaylist[]>([]);
-  const [play, setPlay] = useState(false);
-  const [waveDuration, setWaveDuration] = useState(false);
   const accessToken = useAuth(router.query.code?.toString() ?? "");
+  const { start, pause, minutes, seconds, hours } = useStopwatch();
+
+  const [firstAccess, setFirstAccess] = useState(true);
+  const [play, setPlay] = useState(false);
+  const [theme, setTheme] = useState<"blue" | "purple">("blue");
+
+  const [playlist, setPlaylist] = useState<IPlaylist>();
+  const [playlistsSearched, setPlaylistsSearched] = useState<IPlaylist[]>([]);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     if (!accessToken) return;
@@ -56,7 +32,7 @@ export default function App() {
 
   useEffect(() => {
     if (play) {
-      setFirstEnter(false);
+      setFirstAccess(false);
       start();
     }
     if (!play) {
@@ -65,27 +41,19 @@ export default function App() {
   }, [play]);
 
   useEffect(() => {
-    setTimerHours(hours);
-    setTimerMinutes(minutes);
-    setTimerSeconds(seconds);
-  }, [hours, minutes, seconds]);
-
-  useEffect(() => {
     if (!search) return setSearch("");
 
     spotifyApi.searchPlaylists(search, { limit: 5 }).then((res: any) => {
-      setPlaylistsFound(
-        res.body.playlists.items.map(
-          (pl: { name: any; images: any; uri: any; id: any; owner: any }) => {
-            return {
-              name: pl.name,
-              image: pl.images,
-              uri: pl.uri,
-              id: pl.id,
-              owner: pl.owner,
-            };
-          }
-        )
+      setPlaylistsSearched(
+        res.body.playlists.items.map((pl: any) => {
+          return {
+            name: pl.name,
+            images: pl.images,
+            uri: pl.uri,
+            id: pl.id,
+            owner: pl.owner,
+          };
+        })
       );
     });
   }, [search]);
@@ -107,20 +75,20 @@ export default function App() {
             }`}
             placeholder="Busque por playlist"
           />
-          {playlistsFound.length > 0 && search && (
+          {playlistsSearched.length > 0 && search && (
             <div className="bg-white rounded-lg w-100 mt-2 px-3 py-1 absolute w-[100%]">
-              {playlistsFound.map((pl) => {
+              {playlistsSearched.map((pl) => {
                 return (
                   <button
                     className="flex my-3 text-left"
                     onClick={() => {
-                      setPlaylistsFound([]);
+                      setPlaylistsSearched([]);
                       setPlaylist(pl);
                       setPlay(true);
                       setSearch("");
                     }}
                   >
-                    <img src={pl.image[0].url} width={64} />
+                    {pl.images && <img src={pl.images[0].url} width={64} />}
                     <div className="ml-2">
                       <p className="text-black text-md">{pl.name}</p>
                       <p className="text-black text-sm text-slate-500">
@@ -156,27 +124,21 @@ export default function App() {
           >
             <p className="text-lg font-normal">tempo de foco</p>
             <p className="text-2xl font-bold">
-              {timerHours < 10 ? `0${timerHours}` : timerHours}:
-              {timerMinutes < 10 ? `0${timerMinutes}` : timerMinutes}:
-              {timerSeconds < 10 ? `0${timerSeconds}` : timerSeconds}
+              {hours < 10 ? `0${hours}` : hours}:
+              {minutes < 10 ? `0${minutes}` : minutes}:
+              {seconds < 10 ? `0${seconds}` : seconds}
             </p>
           </div>
         </div>
       </div>
       <div className="flex justify-between items-center">
         <div className="w-[46px]"></div>
-        {firstEnter && !play ? (
-          <h1
-            className="text-5xl text-center m-auto font-thin"
-            style={{ zIndex: 2 }}
-          >
+        {firstAccess && !play ? (
+          <h1 className="text-5xl text-center m-auto font-thin">
             busque uma playlist para iniciar
           </h1>
         ) : (
-          <h1
-            className="text-9xl text-center mx-auto font-thin"
-            style={{ zIndex: 2 }}
-          >
+          <h1 className="text-9xl text-center mx-auto font-thin">
             {play ? "focus" : "pause"}
           </h1>
         )}

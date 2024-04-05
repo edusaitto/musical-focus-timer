@@ -74,7 +74,6 @@ export default function App() {
     if (!search) return setSearch("");
 
     spotifyApi.searchPlaylists(search, { limit: 5 }).then((res: any) => {
-      console.log(res.body.playlists.items);
       setPlaylistsFound(
         res.body.playlists.items.map(
           (pl: { name: any; images: any; uri: any; id: any; owner: any }) => {
@@ -108,13 +107,14 @@ export default function App() {
             }`}
             placeholder="Busque por playlist"
           />
-          {search != "" && playlistsFound && (
+          {playlistsFound.length > 0 && search && (
             <div className="bg-white rounded-lg w-100 mt-2 px-3 py-1 absolute w-[100%]">
               {playlistsFound.map((pl) => {
                 return (
                   <button
                     className="flex my-3 text-left"
                     onClick={() => {
+                      setPlaylistsFound([]);
                       setPlaylist(pl);
                       setPlay(true);
                       setSearch("");
@@ -167,14 +167,14 @@ export default function App() {
         <div className="w-[46px]"></div>
         {firstEnter && !play ? (
           <h1
-            className="text-5xl text-center m-auto pb-20 font-thin"
+            className="text-5xl text-center m-auto font-thin"
             style={{ zIndex: 2 }}
           >
             busque uma playlist para iniciar
           </h1>
         ) : (
           <h1
-            className="text-9xl text-center mx-auto mt-20 pb-20 font-thin"
+            className="text-9xl text-center mx-auto font-thin"
             style={{ zIndex: 2 }}
           >
             {play ? "focus" : "pause"}
